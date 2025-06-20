@@ -2,6 +2,8 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import taskRoutes from './routes/taskRoutes';
+import userRoutes from './routes/userRoutes';
 
 dotenv.config();
 
@@ -10,6 +12,9 @@ const port = process.env.PORT || 5001;
 
 app.use(cors());
 app.use(express.json());
+
+app.use('/api/users', userRoutes);
+app.use('/api/tasks', taskRoutes);
 
 app.get('/', (req, res) => {
     res.send('Hello from backend!');
