@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { onAuthStateChanged, type User } from 'firebase/auth';
-import { auth } from './firebase';
 import HomePage from './pages/HomePage';
 import AuthPage from './pages/AuthPage';
+import api from './api';
 import './App.css';
 
 const App: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    });
-    return () => unsubscribe();
+    api.get('/auth/me')
+      .then(res => setUser(res.data))
+      .catch(() => setUser(null))
+      .finally(() => setLoading(false));
   }, []);
 
+  if (loading) return <div>Loading...</div>;
   return <div>{user ? <HomePage /> : <AuthPage />}</div>;
 };
 

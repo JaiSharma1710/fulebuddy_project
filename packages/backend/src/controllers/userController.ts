@@ -1,3 +1,6 @@
+// This file is now obsolete for user creation with JWT auth.
+// User creation is handled in the new auth controller.
+
 import { Request, Response } from 'express';
 import { User } from '../models/User';
 

@@ -1,10 +1,10 @@
 # Fulebuddy
 
-Fulebuddy is a full-stack task management application built with the MERN stack, containerized with Docker, and authenticated with Firebase.
+Fulebuddy is a full-stack task management application built with the MERN stack, containerized with Docker, and authenticated with JWT (stored in cookies).
 
 ## Features
 
--   User authentication with Firebase (email and password)
+-   User authentication with JWT (email and password)
 -   Create, read, update, and delete tasks
 -   Share tasks with other users
 -   Filter tasks by "All Tasks," "My Tasks," and "Shared Tasks"
@@ -14,7 +14,7 @@ Fulebuddy is a full-stack task management application built with the MERN stack,
 -   **Frontend**: Vite, React, TypeScript
 -   **Backend**: Node.js, Express, TypeScript
 -   **Database**: MongoDB
--   **Authentication**: Firebase
+-   **Authentication**: JWT (with cookies)
 -   **Containerization**: Docker, Docker Compose
 
 ## Project Structure
@@ -68,33 +68,14 @@ The project is set up as a monorepo with the following structure:
 Create a `.env` file in the `packages/backend` directory and add the following:
 
 ```
-# Firebase
-FIREBASE_TYPE=service_account
-FIREBASE_PROJECT_ID=
-FIREBASE_PRIVATE_KEY_ID=
-FIREBASE_PRIVATE_KEY=
-FIREBASE_CLIENT_EMAIL=
-FIREBASE_CLIENT_ID=
-FIREBASE_AUTH_URI=
-FIREBASE_TOKEN_URI=
-FIREBASE_AUTH_PROVIDER_X509_CERT_URL=
-FIREBASE_CLIENT_X509_CERT_URL=
+# JWT Secret
+JWT_SECRET=your_jwt_secret
 
 # MongoDB
 MONGODB_URI=mongodb://mongo:27017/fulebuddy
 ```
 
-Create a `.env` file in the `packages/frontend` directory and add the following:
-
-```
-# Firebase
-VITE_FIREBASE_API_KEY=
-VITE_FIREBASE_AUTH_DOMAIN=
-VITE_FIREBASE_PROJECT_ID=
-VITE_FIREBASE_STORAGE_BUCKET=
-VITE_FIREBASE_MESSAGING_SENDER_ID=
-VITE_FIREBASE_APP_ID=
-```
+No environment variables are required for the frontend.
 
 ### Running the Application
 

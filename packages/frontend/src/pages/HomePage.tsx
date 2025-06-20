@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
-import { auth } from '../firebase';
-import { signOut } from 'firebase/auth';
 import CreateTask from '../components/CreateTask';
 
 interface Task {
@@ -20,6 +18,13 @@ const HomePage: React.FC = () => {
     const [showSharePopup, setShowSharePopup] = useState(false);
     const [shareTaskId, setShareTaskId] = useState('');
     const [shareEmail, setShareEmail] = useState('');
+    const [user, setUser] = useState<any>(null);
+
+    useEffect(() => {
+        api.get('/auth/me')
+            .then(res => setUser(res.data))
+            .catch(() => window.location.reload());
+    }, []);
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -44,10 +49,15 @@ const HomePage: React.FC = () => {
         setShareEmail('');
     };
 
+    const handleLogout = async () => {
+        await api.post('/auth/logout');
+        window.location.reload();
+    };
+
     return (
         <div>
             <h1>Tasks</h1>
-            <button onClick={() => signOut(auth)}>Logout</button>
+            <button onClick={handleLogout}>Logout</button>
             <CreateTask />
             <div>
                 <select onChange={(e) => setFilter(e.target.value)}>

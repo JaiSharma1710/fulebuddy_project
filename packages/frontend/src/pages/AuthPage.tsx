@@ -1,9 +1,4 @@
 import React, { useState } from 'react';
-import {
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-} from 'firebase/auth';
-import { auth } from '../firebase';
 import api from '../api';
 
 const AuthPage: React.FC = () => {
@@ -11,22 +6,20 @@ const AuthPage: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
+    const [error, setError] = useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (isLogin) {
-            await signInWithEmailAndPassword(auth, email, password);
-        } else {
-            const userCredential = await createUserWithEmailAndPassword(
-                auth,
-                email,
-                password
-            );
-            await api.post('/users', {
-                uid: userCredential.user.uid,
-                email,
-                name,
-            });
+        setError('');
+        try {
+            if (isLogin) {
+                await api.post('/auth/login', { email, password });
+            } else {
+                await api.post('/auth/signup', { email, password, name });
+            }
+            window.location.reload();
+        } catch (err: any) {
+            setError(err.response?.data?.message || 'Authentication failed');
         }
     };
 
@@ -56,6 +49,7 @@ const AuthPage: React.FC = () => {
                 />
                 <button type="submit">{isLogin ? 'Login' : 'Sign Up'}</button>
             </form>
+            {error && <div style={{ color: 'red' }}>{error}</div>}
             <button onClick={() => setIsLogin(!isLogin)}>
                 {isLogin ? 'Need an account? Sign Up' : 'Have an account? Login'}
             </button>

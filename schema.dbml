@@ -1,8 +1,8 @@
 Table User {
   _id ObjectId [pk]
-  uid String [unique, not null]
   email String [unique, not null]
   name String [not null]
+  password String [not null, note: 'Hashed password']
 }
 
 Table Task {

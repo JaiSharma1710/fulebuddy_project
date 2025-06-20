@@ -1,18 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
-import admin from '../config/firebase';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config()
 
-export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers.authorization?.split('Bearer ')[1];
+const JWT_SECRET = process.env.JWT_SECRET || 'changeme';
 
+export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+    const token = req.cookies?.token;
     if (!token) {
-        return res.status(401).send({ message: 'No token provided' });
+        return res.status(401).json({ message: 'No token provided' });
     }
-
     try {
-        const decodedToken = await admin.auth().verifyIdToken(token);
-        (req as any).user = decodedToken;
+        const decoded = jwt.verify(token, JWT_SECRET);
+        (req as any).user = decoded;
         next();
-    } catch (error) {
-        return res.status(401).send({ message: 'Unauthorized' });
+    } catch (err) {
+        return res.status(401).json({ message: 'Invalid token' });
     }
 }; 

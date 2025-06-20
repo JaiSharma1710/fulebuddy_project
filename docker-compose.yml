@@ -17,6 +17,7 @@ services:
       - "5001:5001"
     environment:
       - MONGODB_URI=mongodb://mongo:27017/fulebuddy
+      - JWT_SECRET=${JWT_SECRET}
     volumes:
       - ./packages/backend:/app
       - /app/node_modules
