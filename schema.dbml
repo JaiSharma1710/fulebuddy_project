@@ -1,0 +1,14 @@
+Table User {
+  _id ObjectId [pk]
+  uid String [unique, not null]
+  email String [unique, not null]
+  name String [not null]
+}
+
+Table Task {
+  _id ObjectId [pk]
+  title String [not null]
+  description String [not null]
+  createdBy ObjectId [ref: > User._id]
+  sharedWith ObjectId [ref: > User._id]
+} 
