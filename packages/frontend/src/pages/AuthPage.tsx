@@ -24,35 +24,37 @@ const AuthPage: React.FC = () => {
     };
 
     return (
-        <div>
-            <h1>{isLogin ? 'Login' : 'Sign Up'}</h1>
-            <form onSubmit={handleSubmit}>
-                {!isLogin && (
+        <div className="app-container">
+            <div className="card">
+                <h1 style={{ textAlign: 'center', marginBottom: '2rem' }}>{isLogin ? 'Login' : 'Sign Up'}</h1>
+                <form onSubmit={handleSubmit}>
+                    {!isLogin && (
+                        <input
+                            type="text"
+                            placeholder="Name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                    )}
                     <input
-                        type="text"
-                        placeholder="Name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
-                )}
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                <button type="submit">{isLogin ? 'Login' : 'Sign Up'}</button>
-            </form>
-            {error && <div style={{ color: 'red' }}>{error}</div>}
-            <button onClick={() => setIsLogin(!isLogin)}>
-                {isLogin ? 'Need an account? Sign Up' : 'Have an account? Login'}
-            </button>
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button type="submit">{isLogin ? 'Login' : 'Sign Up'}</button>
+                </form>
+                {error && <div className="error">{error}</div>}
+                <button style={{ marginTop: '1rem', background: '#fff', color: '#fda085', border: '1px solid #fda085' }} onClick={() => setIsLogin(!isLogin)}>
+                    {isLogin ? 'Need an account? Sign Up' : 'Have an account? Login'}
+                </button>
+            </div>
         </div>
     );
 };

@@ -5,7 +5,7 @@ import { User } from '../models/User';
 // Get all tasks for the logged-in user (created by them or shared with them)
 export const getTasks = async (req: Request, res: Response) => {
     try {
-        const user = await User.findOne({ uid: (req as any).user.uid });
+        const user = await User.findOne({ email: (req as any).user.email });
         if (!user) {
             return res.status(404).send({ message: 'User not found' });
         }
@@ -21,7 +21,7 @@ export const getTasks = async (req: Request, res: Response) => {
 // Get all tasks created by the logged-in user
 export const getMyTasks = async (req: Request, res: Response) => {
     try {
-        const user = await User.findOne({ uid: (req as any).user.uid });
+        const user = await User.findOne({ email: (req as any).user.email });
         if (!user) {
             return res.status(404).send({ message: 'User not found' });
         }
@@ -35,7 +35,7 @@ export const getMyTasks = async (req: Request, res: Response) => {
 // Get all tasks shared with the logged-in user
 export const getSharedTasks = async (req: Request, res: Response) => {
     try {
-        const user = await User.findOne({ uid: (req as any).user.uid });
+        const user = await User.findOne({ email: (req as any).user.email });
         if (!user) {
             return res.status(404).send({ message: 'User not found' });
         }
@@ -50,7 +50,7 @@ export const getSharedTasks = async (req: Request, res: Response) => {
 export const createTask = async (req: Request, res: Response) => {
     try {
         const { title, description } = req.body;
-        const user = await User.findOne({ uid: (req as any).user.uid });
+        const user = await User.findOne({ email: (req as any).user.email });
         if (!user) {
             return res.status(404).send({ message: 'User not found' });
         }
@@ -60,6 +60,7 @@ export const createTask = async (req: Request, res: Response) => {
             createdBy: user._id,
         });
         await task.save();
+        await task.populate('createdBy', 'name email');
         res.status(201).send(task);
     } catch (error) {
         res.status(400).send(error);
@@ -83,5 +84,27 @@ export const shareTask = async (req: Request, res: Response) => {
         res.send(task);
     } catch (error) {
         res.status(400).send(error);
+    }
+};
+
+// Delete a task
+export const deleteTask = async (req: Request, res: Response) => {
+    try {
+        const user = await User.findOne({ email: (req as any).user.email });
+        if (!user) {
+            return res.status(404).send({ message: 'User not found' });
+        }
+        const task = await Task.findById(req.params.id);
+        if (!task) {
+            return res.status(404).send({ message: 'Task not found' });
+        }
+        // Only allow deleting if user is the creator
+        if (String(task.createdBy) !== String(user._id)) {
+            return res.status(403).send({ message: 'Not authorized to delete this task' });
+        }
+        await task.deleteOne();
+        res.status(204).send();
+    } catch (error) {
+        res.status(500).send(error);
     }
 }; 

@@ -16,7 +16,7 @@ const App: React.FC = () => {
   }, []);
 
   if (loading) return <div>Loading...</div>;
-  return <div>{user ? <HomePage /> : <AuthPage />}</div>;
+  return <div className='main-container'>{user ? <HomePage /> : <AuthPage />}</div>;
 };
 
 export default App;
